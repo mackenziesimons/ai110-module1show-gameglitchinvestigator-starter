@@ -7,7 +7,8 @@ def get_range_for_difficulty(difficulty: str):
     if difficulty == "Normal":
         return 1, 100
     if difficulty == "Hard":
-        return 1, 50
+        #FIX: AI assisted - Adjusted the range for Hard difficulty.
+        return 1, 200
     return 1, 100
 
 
@@ -21,10 +22,12 @@ def parse_guess(raw: str):
     try:
         if "." in raw:
             value = int(float(raw))
+            #FIX: AI assisted - Handling decimal inputs by converting to int.
         else:
             value = int(raw)
     except Exception:
         return False, None, "That is not a number."
+        #FIX: AI assisted - Added clear error handling after reviewing AI suggestions for input validation.
 
     return True, value, None
 
@@ -35,16 +38,19 @@ def check_guess(guess, secret):
 
     try:
         if guess > secret:
-            return "Too High", "📈 Go HIGHER!"
+            return "Too High", "📉 Go LOWER!"
+            #FIX: AI assisted - Corrected the reverse logic after debugging with AI explanation of comparison logic.
         else:
-            return "Too Low", "📉 Go LOWER!"
+            return "Too Low", "📈 Go HIGHER!"
+            #FIX: AI assisted - Adjusted hint direction based on AI debugging feedback.
     except TypeError:
         g = str(guess)
         if g == secret:
             return "Win", "🎉 Correct!"
         if g > secret:
-            return "Too High", "📈 Go HIGHER!"
-        return "Too Low", "📉 Go LOWER!"
+            return "Too High", "📉 Go LOWER!"
+        return "Too Low", "📈 Go HIGHER!"
+        #FIX: AI assisted - Kept fallback comparison but corrected hint logic with AI help.
 
 
 def update_score(current_score: int, outcome: str, attempt_number: int):
@@ -53,14 +59,11 @@ def update_score(current_score: int, outcome: str, attempt_number: int):
         if points < 10:
             points = 10
         return current_score + points
+        #FIX: AI assisted - AI helped verify scoring formula so early wins would reward more points.
 
-    if outcome == "Too High":
-        if attempt_number % 2 == 0:
-            return current_score + 5
+    if outcome in ("Too High", "Too Low"):
         return current_score - 5
-
-    if outcome == "Too Low":
-        return current_score - 5
+        #FIX: AI assisted - Simplified scoring logic with AI guidance so both wrong guesses reduce score consistently.
 
     return current_score
 
@@ -91,9 +94,11 @@ st.sidebar.caption(f"Attempts allowed: {attempt_limit}")
 
 if "secret" not in st.session_state:
     st.session_state.secret = random.randint(low, high)
+    #FIX: AI assisted - AI suggested using difficulty based range when generating the secret number.
 
 if "attempts" not in st.session_state:
-    st.session_state.attempts = 1
+    st.session_state.attempts = 0
+    #FIX: AI assisted - Changed starting attempts to 0 after AI debugging pointed out the player lost an attempt immediately.
 
 if "score" not in st.session_state:
     st.session_state.score = 0
@@ -104,12 +109,27 @@ if "status" not in st.session_state:
 if "history" not in st.session_state:
     st.session_state.history = []
 
+if "game_id" not in st.session_state:
+    st.session_state.game_id = 0
+    #FIX: AI assisted - Added game_id after AI suggested it properly reset Streamlit input fields when starting a new game.
+
+if "difficulty" not in st.session_state:
+    st.session_state.difficulty = difficulty
+
+if st.session_state.difficulty != difficulty:
+    st.session_state.difficulty = difficulty
+    st.session_state.secret = random.randint(low, high)
+    st.session_state.attempts = 0
+    st.session_state.score = 0
+    st.session_state.status = "playing"
+    st.session_state.history = []
+    st.session_state.game_id += 1
+    #FIX: AI assisted - AI helped reset all game state values when difficulty changes to avoid leftover data bugs.
+    st.rerun()
+
 st.subheader("Make a guess")
 
-st.info(
-    f"Guess a number between 1 and 100. "
-    f"Attempts left: {attempt_limit - st.session_state.attempts}"
-)
+attempts_info = st.empty()
 
 with st.expander("Developer Debug Info"):
     st.write("Secret:", st.session_state.secret)
@@ -120,8 +140,9 @@ with st.expander("Developer Debug Info"):
 
 raw_guess = st.text_input(
     "Enter your guess:",
-    key=f"guess_input_{difficulty}"
+    key=f"guess_input_{difficulty}_{st.session_state.game_id}"
 )
+#FIX: AI assisted - AI reccomended dynamic keys so Streamlit refreshes the input field correctly when starting a new game or changing difficulty.
 
 col1, col2, col3 = st.columns(3)
 with col1:
@@ -133,7 +154,12 @@ with col3:
 
 if new_game:
     st.session_state.attempts = 0
-    st.session_state.secret = random.randint(1, 100)
+    st.session_state.secret = random.randint(low, high)
+    st.session_state.score = 0
+    st.session_state.status = "playing"
+    st.session_state.history = []
+    st.session_state.game_id += 1
+    #FIX: AI assisted - Reset all session variables after reviewing AI debugging suggestions to ensure a clean state for a new game.
     st.success("New game started.")
     st.rerun()
 
@@ -145,20 +171,21 @@ if st.session_state.status != "playing":
     st.stop()
 
 if submit:
-    st.session_state.attempts += 1
-
     ok, guess_int, err = parse_guess(raw_guess)
 
     if not ok:
         st.session_state.history.append(raw_guess)
         st.error(err)
+    elif guess_int < low or guess_int > high:
+        st.session_state.history.append(guess_int)
+        st.error(f"Please enter a number between {low} and {high}.")
+        #FIX: AI assisted - AI helped add range validation so guesses outside difficulty limits are rejected.
     else:
+        st.session_state.attempts += 1
         st.session_state.history.append(guess_int)
 
-        if st.session_state.attempts % 2 == 0:
-            secret = str(st.session_state.secret)
-        else:
-            secret = st.session_state.secret
+        secret = st.session_state.secret
+        #FIX: AI assisted - Removed earlier bug where the secret was converted to a string after AI debugging identified comparison issues.
 
         outcome, message = check_guess(guess_int, secret)
 
@@ -186,6 +213,13 @@ if submit:
                     f"The secret was {st.session_state.secret}. "
                     f"Score: {st.session_state.score}"
                 )
+
+attempts_left = max(attempt_limit - st.session_state.attempts, 0)
+attempts_info.info(
+    f"Guess a number between {low} and {high}. "
+    f"Attempts left: {attempts_left}"
+)
+#FIX: AI assisted - AI helped correct attempt display so it never shows negative attempts left.
 
 st.divider()
 st.caption("Built by an AI that claims this code is production-ready.")

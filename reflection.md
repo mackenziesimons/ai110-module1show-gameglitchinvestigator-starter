@@ -7,7 +7,8 @@ Answer each question in 3 to 5 sentences. Be specific and honest about what actu
 - What did the game look like the first time you ran it?
 - List at least two concrete bugs you noticed at the start  
   (for example: "the secret number kept changing" or "the hints were backwards").
-
+  
+The first time I ran the game, it would not let me press enter to submit my number. It also seemed like the indicators were opposite.(Go higher and lower) Two concrete bugs would be the hints were backwards, and the attempts were off.
 ---
 
 ## 2. How did you use AI as a teammate?
@@ -16,6 +17,7 @@ Answer each question in 3 to 5 sentences. Be specific and honest about what actu
 - Give one example of an AI suggestion that was correct (including what the AI suggested and how you verified the result).
 - Give one example of an AI suggestion that was incorrect or misleading (including what the AI suggested and how you verified the result).
 
+I used AI as a teammate through the wonders of Copilot. I also occasionally used ChatGPT just to double check to see if I would recieve an opposing answer. An example of AI being correct towards helping me was fixing the display so it never shows that there were more or less attempts remaining then there should've been. An example of AI being incorrect towards helping me was the 'Easy' difficulty range of 1-20. At first it kept allowing the game to run the range 1-100 and would not change until I described the error. Through constently running the website and describing each error, I was able to have the AI assist me properly to solve the issue that I was having.  
 ---
 
 ## 3. Debugging and testing your fixes
@@ -25,6 +27,7 @@ Answer each question in 3 to 5 sentences. Be specific and honest about what actu
   and what it showed you about your code.
 - Did AI help you design or understand any tests? How?
 
+I made the decision of whether the bug was truly fixed through constantly viewing the website for errors, and being very thorough of each code that I was changing. I tested the pytest for the "New Game" button and when I would press it in the website, it would give me this traceback error. AI helped me design and understand the tests from correcting the ranges, correcting the attempts limit, making the "New Game" button actually work, etc. I also was able to use another platform like ChatGPT to explain specific errors to me that were not clicking for CoPilot.
 ---
 
 ## 4. What did you learn about Streamlit and state?
