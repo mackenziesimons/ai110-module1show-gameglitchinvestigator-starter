@@ -25,13 +25,33 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 📝 Document Your Experience
 
-- [ ] Describe the game's purpose.
-- [ ] Detail which bugs you found.
-- [ ] Explain what fixes you applied.
+- [x] Describe the game's purpose.
+
+The game is a number guessing game where the player selects a difficulty and tries to guess a randomly generated number within a limited number of attempts while receiving hints.
+
+- [x] Detail which bugs you found.
+
+The main bugs were reversed hints, the secret number sometimes being converted to a string, the attempt counter starting incorrectly, guesses outside the range being allowed, and the new game button not resetting the game properly.
+
+- [x] Explain what fixes you applied.
+
+I corrected the hint logic, kept the secret number as an integer, started attempts at 0, added range validation for guesses, and updated the new game function to reset the game state correctly with AI assistance.
+
 
 ## 📸 Demo
 
-- [ ] [Insert a screenshot of your fixed, winning game here]
+- [x] [Insert a screenshot of your fixed, winning game here]
+![alt text](<Screenshot 2026-03-15 232953.png>)
+- [x] [Insert screenshots of pytests]
+![alt text](SSCorrectingHintDirectionInCheck_GuessFunction.png)
+![alt text](SSFixingDifficultyRangeLogicInFunction.png)
+![alt text](SSFixingIntialAttemptCountInStreamlitApp.png)
+![alt text](SSFixingNewGameButtonFunctionalityInStreamlit.png)
+![alt text](SSFixingScoreAjustmentLogicForTooHighOutcome.png)
+![alt text](SSFixingSecretConversionIssueInGameLogic.png)
+![alt text](SSUpdatingGuessingGameDisplayLogic.png)
+![alt text](SSInconsistentScoringSystemIssue.png)
+
 
 ## 🚀 Stretch Features
 
